@@ -118,7 +118,7 @@ void SearchingWrongWords::Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT co
 	}
 	if (id == IDC_BUTTON4) {	
 		HANDLE h; 
-		h = CreateThread(NULL, 0, Thread, this, 0, NULL);	
+		h = CreateThread(NULL, 0, Thread, this, 0, NULL);		
 		CloseHandle(h);
 		EnableWindow(hButton4, FALSE);			
 	}
