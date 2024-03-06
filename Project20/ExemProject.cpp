@@ -58,21 +58,29 @@ void SearchWords(const std::wstring& directory, HWND hList2) {
 						if (std::find(wordArray.begin(), wordArray.end(), word) != wordArray.end()) {
 							FileName inform;	
 							inform.word = word;
-							inform.name = findFileWorld.cFileName;
+							inform.name = findFileWorld.cFileName;	
 
 							std::wstring wordAndNameFile = inform.word + L" //" + inform.name + L"";		
 
 							SendMessage(hList2, LB_ADDSTRING, 0, (LPARAM)wordAndNameFile.c_str());	
+							std::wstring ForbiddenWordsFilePath = L"C:\\Users\\alecs\\source\\repos\\Project20\\Project20\\Forbidden words\\" + inform.name;	
+							CopyFile(filePath.c_str(), ForbiddenWordsFilePath.c_str(), FALSE);
+
+
 						}
 					}
 				}
-				file.close();
+				file.close();	
 			}
-		} while (FindNextFile(hFind, &findFileWorld) != 0);	
-		FindClose(hFind);
+		} while (FindNextFile(hFind, &findFileWorld) != 0);		
+		FindClose(hFind);	
 	}
 }
 
+void RewritingWordsIntoAsterisks(const std::wstring& directory) {	
+	WIN32_FIND_DATA findFileWorld;
+	
+}
 
 DWORD WINAPI Thread(LPVOID lp) {
 	SearchingWrongWords* p = (SearchingWrongWords*)lp;
@@ -82,6 +90,13 @@ DWORD WINAPI Thread(LPVOID lp) {
 	return 0;
 }	
 
+DWORD WINAPI Thread2(LPVOID lp) {	
+	SearchingWrongWords* p = (SearchingWrongWords*)lp;
+	RewritingWordsIntoAsterisks(L"C:\\Users\\alecs\\source\\repos\\Project20\\Project20\\stars instead of words");
+
+	EnableWindow(p->hButton4, TRUE);
+	return 0;
+}
 
 void SearchingWrongWords::Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 {
@@ -120,10 +135,12 @@ void SearchingWrongWords::Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT co
 		HANDLE h; 
 		h = CreateThread(NULL, 0, Thread, this, 0, NULL);		
 		CloseHandle(h);
-		EnableWindow(hButton4, FALSE);			
+		h = CreateThread(NULL, 0, Thread2, this, 0, NULL);		
+		CloseHandle(h);	
+		EnableWindow(hButton4, FALSE);				
 	}
 }
-
+//"C:\Users\alecs\source\repos\Project20\Project20\stars instead of words"	
 //void SearchingWrongWords::Cls_OnSize(HWND hwnd, UINT state, int cx, int cy)	
 //{
 //
