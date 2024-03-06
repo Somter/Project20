@@ -1,6 +1,6 @@
 #include "ExemProject.h"
 std::vector<TCHAR*> wordArray;	
-
+static int count = 0;	
 SearchingWrongWords* SearchingWrongWords::ptr = NULL;
 
 SearchingWrongWords::SearchingWrongWords(void)
@@ -77,10 +77,47 @@ void SearchWords(const std::wstring& directory, HWND hList2) {
 	}
 }
 
-void RewritingWordsIntoAsterisks(const std::wstring& directory) {	
-	WIN32_FIND_DATA findFileWorld;
+//void RewritingWordsIntoAsterisks(const std::wstring& directory) {
+//
+//}
 	
-}
+void CreateReport(const std::wstring& directory) {
+	WIN32_FIND_DATA findFileWorld;
+	HANDLE hFind = FindFirstFile((directory + L"\\*.txt").c_str(), &findFileWorld);
+
+	if (hFind != INVALID_HANDLE_VALUE) {
+		std::wofstream reportFile(L"report.txt"); 
+		count++;
+		if (reportFile.is_open()) {
+			do {
+				std::wstring filePath = directory + L"\\" + findFileWorld.cFileName;
+
+				std::wifstream file(filePath);
+				if (file.is_open()) {
+					std::wstring line;
+					bool foundInFile = false; 
+					while (std::getline(file, line)) {
+						std::wistringstream iss(line);
+						std::wstring word;
+						while (iss >> word) {
+							if (std::find(wordArray.begin(), wordArray.end(), word) != wordArray.end()) {
+								foundInFile = true; 
+							}
+						}
+					}
+					file.close();
+					if (foundInFile) {
+						reportFile << "File: " << filePath << std::endl;
+						reportFile << "Size: " << findFileWorld.nFileSizeLow << " bytes" << std::endl << std::endl;
+					}
+				}
+			} while (FindNextFile(hFind, &findFileWorld) != 0);
+			FindClose(hFind);
+
+			reportFile.close(); 
+		}	
+	}	
+}	
 
 DWORD WINAPI Thread(LPVOID lp) {
 	SearchingWrongWords* p = (SearchingWrongWords*)lp;
@@ -90,13 +127,20 @@ DWORD WINAPI Thread(LPVOID lp) {
 	return 0;
 }	
 
-DWORD WINAPI Thread2(LPVOID lp) {	
+DWORD WINAPI Thread3(LPVOID lp) {	
 	SearchingWrongWords* p = (SearchingWrongWords*)lp;
-	RewritingWordsIntoAsterisks(L"C:\\Users\\alecs\\source\\repos\\Project20\\Project20\\stars instead of words");
+	CreateReport(L"C:\\Users\\alecs\\source\\repos\\Project20\\Project20");	
 
 	EnableWindow(p->hButton4, TRUE);
 	return 0;
 }
+
+//DWORD WINAPI Thread2(LPVOID lp) {	
+//	SearchingWrongWords* p = (SearchingWrongWords*)lp;
+//	
+//	EnableWindow(p->hButton4, TRUE);
+//	return 0;
+//}
 
 void SearchingWrongWords::Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 {
@@ -135,12 +179,13 @@ void SearchingWrongWords::Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT co
 		HANDLE h; 
 		h = CreateThread(NULL, 0, Thread, this, 0, NULL);		
 		CloseHandle(h);
-		h = CreateThread(NULL, 0, Thread2, this, 0, NULL);		
-		CloseHandle(h);	
-		EnableWindow(hButton4, FALSE);				
+		h = CreateThread(NULL, 0, Thread3, this, 0, NULL);
+		CloseHandle(h);
+		/*h = CreateThread(NULL, 0, Thread2, this, 0, NULL);		
+		CloseHandle(h);	*/
+		EnableWindow(hButton4, FALSE);						
 	}
 }
-//"C:\Users\alecs\source\repos\Project20\Project20\stars instead of words"	
 //void SearchingWrongWords::Cls_OnSize(HWND hwnd, UINT state, int cx, int cy)	
 //{
 //
