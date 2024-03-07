@@ -1,6 +1,9 @@
-1File: C:\Users\alecs\source\repos\Project20\Project20\MyFile.txt
+File: C:\Users\alecs\source\repos\Project20\Project20\MyFile.txt
 Size: 13 bytes
 
-1File: C:\Users\alecs\source\repos\Project20\Project20\MyFile2.txt
+File: C:\Users\alecs\source\repos\Project20\Project20\MyFile2.txt
 Size: 8 bytes
+
+File: C:\Users\alecs\source\repos\Project20\Project20\MyFile3.txt
+Size: 13 bytes
 

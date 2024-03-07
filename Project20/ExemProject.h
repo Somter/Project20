@@ -14,7 +14,9 @@ public:
 	void Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify);
 	void Cls_OnSize(HWND hwnd, UINT state, int cx, int cy);	
 	void OnTrayIcon(WPARAM wp, LPARAM lp); 
-	HWND hButton4, hButton5, hEdit1, hList1, hList2;	
+	void Cls_OnTimer(HWND hwnd, UINT id);		
+	HWND hButton4, hButton5, hButton2, hButton3, hEdit1, hList1, hList2, hProgress;	
 	HICON hIcon;		
-	PNOTIFYICONDATA pNID;		
+	PNOTIFYICONDATA pNID;	
+	int current = 0;	
 };
